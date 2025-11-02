@@ -1,0 +1,53 @@
+import streamlit as st
+from openai import OpenAI
+
+# 🔒 OpenAIのAPIキーを安全に読み込み（※コード内に直接書かない）
+# Streamlit Cloudを使う場合は、Secretsに OPENAI_API_KEY を設定してください
+# ローカルで実行する場合は、ターミナルで以下を実行して環境変数を設定できます：
+# export OPENAI_API_KEY="sk-あなたのAPIキー"
+
+import os
+api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
+
+if not api_key:
+    st.error("⚠️ OpenAI APIキーが設定されていません。Secretsまたは環境変数に追加してください。")
+else:
+    client = OpenAI(api_key=api_key)
+
+    # 🌸 アプリのタイトルと説明
+    st.title("🍳 AIレシピアシスタント")
+    st.write("食材と気分を入力すると、あなたにぴったりのレシピを提案します！")
+
+    # 🥕 入力フォーム
+    ingredients = st.text_input("食材を入力（カンマ区切りで）")
+    mood = st.text_input("今日の気分（例：疲れた、寒い、元気）")
+
+    # 🍱 ボタンが押されたらレシピを生成
+    if st.button("レシピを提案して！"):
+        if not ingredients or not mood:
+            st.warning("⚠️ 食材と気分の両方を入力してください。")
+        else:
+            with st.spinner("レシピを考え中...👩‍🍳"):
+                prompt = f"""
+                あなたは料理の専門家です。
+                次の食材を使って日本風の家庭料理を提案してください。
+                食材: {ingredients}
+                気分: {mood}
+                以下の形式で答えてください：
+                1. レシピ名
+                2. 説明
+                3. 材料
+                4. 作り方
+                """
+
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful Japanese cooking assistant."},
+                        {"role": "user", "content": prompt}
+                    ],
+                )
+
+                recipe = response.choices[0].message.content
+                st.success("🍽️ レシピができました！")
+                st.markdown(recipe)
