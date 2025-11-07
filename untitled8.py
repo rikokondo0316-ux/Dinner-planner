@@ -59,12 +59,17 @@ else:
             with st.spinner("完成イメージを作成中...🍱"):
                 image_prompt = f"{recipe.splitlines()[0]} の完成料理写真のようなリアルな画像。和食スタイル、自然光。"
                 try:
-                    # 🌸 Bing画像検索リンクを作る
-recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
-query = f"{recipe_name} 和食 料理"
-bing_url = f"https://www.bing.com/images/search?q={query}"
+                   try:
+    # 🌸 Bing画像検索リンクを作る
+    recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
+    query = f"{recipe_name} 和食 料理"
+    bing_url = f"https://www.bing.com/images/search?q={query}"
 
-st.markdown(f"🔍 [この料理の画像をBingで見る]({bing_url})")
+    st.markdown(f"🔍 [この料理の画像をBingで見る]({bing_url})")
+
+except Exception as e:
+    st.warning("⚠️ 画像リンクの作成に失敗しました。")
+    st.write(e)
 
                 except Exception as e:
                     st.warning("⚠️ 画像生成に失敗しました。APIの設定を確認してください。")
