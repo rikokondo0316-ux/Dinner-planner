@@ -62,7 +62,7 @@ else:
                     image_response = client.images.generate(
                         model="gpt-image-1",
                         prompt=image_prompt,
-                        size="512x512"
+                        size="1024x1024"
                     )
                     image_url = image_response.data[0].url
                     st.image(image_url, caption="完成イメージ🍽️")
