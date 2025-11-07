@@ -2,7 +2,7 @@ import streamlit as st
 from openai import OpenAI
 import os
 
-# 🔒 APIキーの安全な読み込み
+# 🔒 OpenAIのAPIキーを安全に読み込み
 api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
 
 if not api_key:
@@ -10,21 +10,22 @@ if not api_key:
 else:
     client = OpenAI(api_key=api_key)
 
-    # 🌸 アプリのタイトルと説明
-    st.title("🍳 AIレシピアシスタント")
-    st.write("食材と気分を入力すると、レシピ・栄養情報・完成イメージを提案します！")
+    # 🌸 タイトルと説明
+    st.title("🍳 AIレシピアシスタント（無料画像つき）")
+    st.write("食材と気分を入力すると、レシピと栄養情報を提案します！")
+    st.write("※画像は無料のBing検索リンクで表示します。")
 
-    # 🥕 入力フォーム
+    # 🥕 入力欄
     ingredients = st.text_input("食材を入力（カンマ区切りで）")
     mood = st.text_input("今日の気分（例：疲れた、寒い、元気）")
 
-    # 🍱 ボタンが押されたらレシピを生成
+    # 🍱 ボタンを押したとき
     if st.button("レシピを提案して！"):
         if not ingredients or not mood:
             st.warning("⚠️ 食材と気分の両方を入力してください。")
         else:
             with st.spinner("レシピを考え中...👩‍🍳"):
-                # 🧠 レシピ生成プロンプト
+                # 🧠 AIへの指示
                 prompt = f"""
                 あなたは日本料理の専門家であり、栄養士でもあります。
                 次の食材を使って日本風の家庭料理を1つ提案してください。
@@ -44,7 +45,7 @@ else:
                    - 炭水化物（g）
                 """
 
-                # 🍳 ChatGPTにレシピ生成を依頼
+                # 🍳 レシピ生成
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
@@ -55,40 +56,33 @@ else:
 
                 recipe = response.choices[0].message.content
 
-            # 🖼️ 料理画像を生成
-            with st.spinner("完成イメージを作成中...🍱"):
-                image_prompt = f"{recipe.splitlines()[0]} の完成料理写真のようなリアルな画像。和食スタイル、自然光。"
-                try:
-                   try:
-    # 🌸 Bing画像検索リンクを作る
-    recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
-    query = f"{recipe_name} 和食 料理"
-    bing_url = f"https://www.bing.com/images/search?q={query}"
-
-    st.markdown(f"🔍 [この料理の画像をBingで見る]({bing_url})")
-
-except Exception as e:
-    st.warning("⚠️ 画像リンクの作成に失敗しました。")
-    st.write(e)
-
-                except Exception as e:
-                    st.warning("⚠️ 画像生成に失敗しました。APIの設定を確認してください。")
-                    st.write(e)
-
-            # ✅ 結果の表示
+            # ✅ 結果を表示
             st.success("🍽️ レシピができました！")
             st.markdown(recipe)
 
-            # 💾 オプション：保存機能
+            # 🖼️ 無料の画像検索リンクを作成（Bing）
+            try:
+                recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
+                query = f"{recipe_name} 和食 料理"
+                bing_url = f"https://www.bing.com/images/search?q={query}"
+
+                st.markdown(f"🔍 [この料理の画像をBingで見る]({bing_url})")
+
+            except Exception as e:
+                st.warning("⚠️ 画像リンクの作成に失敗しました。")
+                st.write(e)
+
+            # 💾 保存機能
             if "history" not in st.session_state:
                 st.session_state.history = []
+
             if st.button("このレシピを保存する"):
                 st.session_state.history.append(recipe)
                 st.success("💾 レシピを保存しました！")
 
-    # 📜 履歴の表示
+    # 📖 保存したレシピを表示
     if "history" in st.session_state and st.session_state.history:
-        st.subheader("📖 保存したレシピ")
+        st.subheader("📜 保存したレシピ")
         for i, r in enumerate(st.session_state.history):
             with st.expander(f"レシピ {i+1}"):
                 st.markdown(r)
