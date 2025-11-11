@@ -1,3 +1,9 @@
+import streamlit as st
+from openai import OpenAI
+import os
+import requests
+from bs4 import BeautifulSoup  # ← 追加（画像を探すため）
+
 st.markdown("""
 <style>
 /* 全体の背景色 */
@@ -31,11 +37,7 @@ h1 {
 </style>
 """, unsafe_allow_html=True)
 
-import streamlit as st
-from openai import OpenAI
-import os
-import requests
-from bs4 import BeautifulSoup  # ← 追加（画像を探すため）
+
 
 # 🔒 OpenAIのAPIキーを安全に読み込み
 api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
