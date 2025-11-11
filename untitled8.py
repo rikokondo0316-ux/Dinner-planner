@@ -4,38 +4,77 @@ import os
 import requests
 from bs4 import BeautifulSoup  # ← 追加（画像を探すため）
 
+
+ # 💎 ─────────────────────────────
+# 白 × 水色 かわいいシンプルデザイン（import の後に貼る）
+# 💎 ─────────────────────────────
 st.markdown("""
 <style>
-/* 全体の背景色 */
-body {
-    background-color: #fff7fc;
+
+html, body {
+    background-color: #f7fbff; /* ほぼ白に近い水色背景 */
 }
 
-/* ボックスのデザイン */
-div.stButton > button {
-    background-color: #ffb7d5;
-    color: white;
-    border-radius: 12px;
-    padding: 8px 20px;
-    border: none;
-    font-size: 16px;
-}
-div.stButton > button:hover {
-    background-color: #ff99c8;
+/* タイトルや見出しをすっきりした水色に */
+h1, h2, h3 {
+    color: #3aa7e0 !important;
+    font-weight: 700;
 }
 
-/* 入力欄デザイン */
+/* 入力フォームを丸くして淡い水色でふんわり */
 input, textarea {
     border-radius: 10px !important;
-    border: 1px solid #ffc6d9 !important;
+    border: 1.5px solid #b8e1ff !important;
+    padding: 8px !important;
+    background-color: white !important;
 }
 
-/* タイトル文字を可愛く */
-h1 {
-    color: #ff66a3 !important;
+/* ボタン：白 × 水色で清潔感 */
+div.stButton > button {
+    background-color: #d4efff;
+    color: #1b85c9;
+    border-radius: 12px;
+    padding: 8px 20px;
+    border: 1.5px solid #9ad7ff;
+    font-size: 16px;
+    transition: 0.2s;
 }
+
+div.stButton > button:hover {
+    background-color: #bde6ff;
+    border-color: #7ccaff;
+}
+
+/* 成功メッセージの緑色を水色に */
+div.stAlert.success {
+    background-color: #e3f6ff;
+    border-left: 5px solid #5cc0ff !important;
+    color: #1479b8;
+}
+
+/* Warning も目に優しい水色系に */
+div.stAlert.warning {
+    background-color: #fff8e5;
+    border-left: 5px solid #ffc96b !important;
+    color: #b37a00;
+}
+
+/* レシピテキストを爽やかに読みやすく */
+p, li {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #234b5e;
+}
+
+/* 展開ボックス（expander）をふんわり白水色に */
+.streamlit-expanderHeader {
+    background-color: #e9f5ff !important;
+    border-radius: 8px !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
