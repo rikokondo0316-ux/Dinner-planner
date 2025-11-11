@@ -1,3 +1,36 @@
+st.markdown("""
+<style>
+/* 全体の背景色 */
+body {
+    background-color: #fff7fc;
+}
+
+/* ボックスのデザイン */
+div.stButton > button {
+    background-color: #ffb7d5;
+    color: white;
+    border-radius: 12px;
+    padding: 8px 20px;
+    border: none;
+    font-size: 16px;
+}
+div.stButton > button:hover {
+    background-color: #ff99c8;
+}
+
+/* 入力欄デザイン */
+input, textarea {
+    border-radius: 10px !important;
+    border: 1px solid #ffc6d9 !important;
+}
+
+/* タイトル文字を可愛く */
+h1 {
+    color: #ff66a3 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 import streamlit as st
 from openai import OpenAI
 import os
@@ -19,6 +52,22 @@ else:
     # 🥕 入力欄
     ingredients = st.text_input("食材を入力（カンマ区切りで）")
     mood = st.text_input("今日の気分（例：疲れた、寒い、元気）")
+st.markdown(
+    """
+    <div style="
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        margin-top:20px;
+    ">
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(recipe)
+
+st.markdown("</div>", unsafe_allow_html=True)
 
     # 🍱 ボタン
     if st.button("レシピを提案して！"):
