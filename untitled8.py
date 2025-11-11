@@ -59,33 +59,34 @@ else:
             st.success("🍽️ レシピができました！")
             st.markdown(recipe)
 
-          # 🖼️ Pixabay画像を表示（無料＆安定）
+          # 🖼️ Pixabay画像を表示（精度アップ版！）
 try:
     recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
 
-    # APIキー読み込み
     PIXABAY_KEY = st.secrets["PIXABAY_API_KEY"]
 
-    # 検索URL
-    query = f"{recipe_name} 和食"
-    url = f"https://pixabay.com/api/?key={PIXABAY_KEY}&q={query}&image_type=photo&orientation=horizontal"
+    # ✅ 和食の料理っぽさを強化したクエリ
+    query = f"{recipe_name} Japanese food dish 和食 料理 食べ物"
+
+    url = (
+        f"https://pixabay.com/api/?key={PIXABAY_KEY}"
+        f"&q={query}"
+        f"&image_type=photo"
+        f"&category=food"
+        f"&orientation=horizontal"
+    )
 
     res = requests.get(url)
     data = res.json()
 
-    # ✅ 画像が1枚もない場合
     if "hits" not in data or len(data["hits"]) == 0:
-        st.warning("⚠️ 画像が見つかりませんでした。")
+        st.warning("⚠️ 合う画像が見つかりませんでした。")
     else:
-        # ✅ 1番目の画像を表示
         img_url = data["hits"][0]["webformatURL"]
         st.image(img_url, caption=f"{recipe_name}（Pixabay画像）")
 
 except Exception as e:
-    st.warning("⚠️ 画像の取得でエラーが発生しました。")
+    st.warning("⚠️ 画像の取得でエラーが出ました。")
     st.write(e)
 
-
-except Exception:
-    st.warning("⚠️ 画像の取得に失敗しました。")
 
