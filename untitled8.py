@@ -59,35 +59,32 @@ else:
             st.success("🍽️ レシピができました！")
             st.markdown(recipe)
 
-          # 🖼️ 無料でBing画像を1枚表示（SVG対策＋安全版）
+          # 🖼️ Pixabay画像を表示（無料＆安定）
 try:
     recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
-    query = f"{recipe_name} 和食 料理"
-    bing_url = f"https://www.bing.com/images/search?q={query}"
 
-    st.markdown(f"🔍 [この料理の画像をBingで見る]({bing_url})")
+    # APIキー読み込み
+    PIXABAY_KEY = st.secrets["PIXABAY_API_KEY"]
 
-    # 🌐 Bing検索ページを取得
-    headers = {"User-Agent": "Mozilla/5.0"}
-    res = requests.get(bing_url, headers=headers)
-    soup = BeautifulSoup(res.text, "html.parser")
+    # 検索URL
+    query = f"{recipe_name} 和食"
+    url = f"https://pixabay.com/api/?key={PIXABAY_KEY}&q={query}&image_type=photo&orientation=horizontal"
 
-    # ✅ JPG/PNG の画像だけ探す（SVGは避ける）
-    img_url = None
-    for img in soup.find_all("img"):
-        src = img.get("src")
-        if src and (src.endswith(".jpg") or src.endswith(".jpeg") or src.endswith(".png")):
-            img_url = src
-            break
+    res = requests.get(url)
+    data = res.json()
 
-    # ✅ 見つかったら表示
-    if img_url:
-        st.image(img_url, caption=f"{recipe_name}（Bing画像）")
+    # ✅ 画像が1枚もない場合
+    if "hits" not in data or len(data["hits"]) == 0:
+        st.warning("⚠️ 画像が見つかりませんでした。")
     else:
-        st.warning("⚠️ 適切な画像が見つかりませんでした。")
+        # ✅ 1番目の画像を表示
+        img_url = data["hits"][0]["webformatURL"]
+        st.image(img_url, caption=f"{recipe_name}（Pixabay画像）")
 
-    # 🔗 Bingへのリンク
-    st.markdown(f"🔍 [もっと画像を見る]({bing_url})")
+except Exception as e:
+    st.warning("⚠️ 画像の取得でエラーが発生しました。")
+    st.write(e)
+
 
 except Exception:
     st.warning("⚠️ 画像の取得に失敗しました。")
