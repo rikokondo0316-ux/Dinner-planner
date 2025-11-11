@@ -54,20 +54,7 @@ else:
     mood = st.text_input("今日の気分（例：疲れた、寒い、元気）")
 st.markdown(
     """
-    <div style="
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        margin-top:20px;
-    ">
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown(recipe)
-
-st.markdown("</div>", unsafe_allow_html=True)
+    
 
     # 🍱 ボタン
     if st.button("レシピを提案して！"):
@@ -103,6 +90,22 @@ st.markdown("</div>", unsafe_allow_html=True)
                     ],
                 )
                 recipe = response.choices[0].message.content
+st.markdown(
+    """
+    <div style="
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        margin-top:20px;
+    ">
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(recipe)
+
+st.markdown("</div>", unsafe_allow_html=True)
 
             # ✅ レシピを表示
             st.success("🍽️ レシピができました！")
