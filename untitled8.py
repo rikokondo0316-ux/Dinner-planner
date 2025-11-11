@@ -89,22 +89,6 @@ else:
                 )
                 recipe = response.choices[0].message.content
 
-st.markdown(
-    """
-    <div style="
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        margin-top:20px;
-    ">
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown(recipe)
-
-st.markdown("</div>", unsafe_allow_html=True)
 
             # ✅ レシピを表示
             st.success("🍽️ レシピができました！")
