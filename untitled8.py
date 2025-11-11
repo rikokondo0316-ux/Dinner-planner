@@ -130,8 +130,10 @@ else:
                 )
                 recipe = response.choices[0].message.content
 
-
+with st.container():
+    st.markdown('<div class="card">', unsafe_allow_html=True)
             # ✅ レシピを表示
             st.success("🍽️ レシピができました！")
             st.markdown(recipe)
+st.markdown("</div>", unsafe_allow_html=True)
 
