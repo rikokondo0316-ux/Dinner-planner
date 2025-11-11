@@ -52,9 +52,7 @@ else:
     # 🥕 入力欄
     ingredients = st.text_input("食材を入力（カンマ区切りで）")
     mood = st.text_input("今日の気分（例：疲れた、寒い、元気）")
-st.markdown(
-    """
-    
+
 
     # 🍱 ボタン
     if st.button("レシピを提案して！"):
@@ -90,6 +88,7 @@ st.markdown(
                     ],
                 )
                 recipe = response.choices[0].message.content
+
 st.markdown(
     """
     <div style="
