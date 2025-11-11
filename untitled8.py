@@ -13,8 +13,8 @@ else:
     client = OpenAI(api_key=api_key)
 
     # 🌸 タイトルと説明
-    st.title("🍳 AIレシピアシスタント（画像表示つき）")
-    st.write("食材と気分を入力すると、レシピ・栄養情報・画像を提案します！")
+    st.title("🍳ディナープランナー")
+    st.write("食材と気分を入力すると、レシピ・栄養情報・を提案します！")
 
     # 🥕 入力欄
     ingredients = st.text_input("食材を入力（カンマ区切りで）")
