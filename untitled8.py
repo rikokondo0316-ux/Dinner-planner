@@ -59,28 +59,36 @@ else:
             st.success("🍽️ レシピができました！")
             st.markdown(recipe)
 
-            # 🖼️ 無料でBing画像を1枚表示
-            try:
-                recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
-                query = f"{recipe_name} 和食 料理"
-                bing_url = f"https://www.bing.com/images/search?q={query}"
+          # 🖼️ 無料でBing画像を1枚表示（SVG対策＋安全版）
+try:
+    recipe_name = recipe.splitlines()[0].replace("1. ", "").strip()
+    query = f"{recipe_name} 和食 料理"
+    bing_url = f"https://www.bing.com/images/search?q={query}"
 
-                # 🌐 Bing検索ページを取得
-                headers = {"User-Agent": "Mozilla/5.0"}
-                res = requests.get(bing_url, headers=headers)
-                soup = BeautifulSoup(res.text, "html.parser")
+    st.markdown(f"🔍 [この料理の画像をBingで見る]({bing_url})")
 
-                # 🖼️ 最初の画像URLを探す
-                img_tag = soup.find("img")
-                if img_tag and "src" in img_tag.attrs:
-                    img_url = img_tag["src"]
-                    st.image(img_url, caption=f"{recipe_name}（Bing画像）")
-                else:
-                    st.warning("⚠️ 画像を見つけられませんでした。")
-                
-                # 🔗 リンクも残しておく
-                st.markdown(f"🔍 [もっと画像を見る]({bing_url})")
+    # 🌐 Bing検索ページを取得
+    headers = {"User-Agent": "Mozilla/5.0"}
+    res = requests.get(bing_url, headers=headers)
+    soup = BeautifulSoup(res.text, "html.parser")
 
-            except Exception as e:
-                st.warning("⚠️ 画像の取得に失敗しました。")
-                st.write(e)
+    # ✅ JPG/PNG の画像だけ探す（SVGは避ける）
+    img_url = None
+    for img in soup.find_all("img"):
+        src = img.get("src")
+        if src and (src.endswith(".jpg") or src.endswith(".jpeg") or src.endswith(".png")):
+            img_url = src
+            break
+
+    # ✅ 見つかったら表示
+    if img_url:
+        st.image(img_url, caption=f"{recipe_name}（Bing画像）")
+    else:
+        st.warning("⚠️ 適切な画像が見つかりませんでした。")
+
+    # 🔗 Bingへのリンク
+    st.markdown(f"🔍 [もっと画像を見る]({bing_url})")
+
+except Exception:
+    st.warning("⚠️ 画像の取得に失敗しました。")
+
