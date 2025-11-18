@@ -3,7 +3,7 @@ from openai import OpenAI
 import os
 
 # 💎 ─────────────────────────────
-# 白 × 水色 かわいいシンプルデザイン
+# 白 × 水色 かわいいシンプルデザイン（追加済み）
 # 💎 ─────────────────────────────
 st.markdown("""
 <style>
@@ -18,7 +18,7 @@ h1, h2, h3 {
     font-weight: 700;
 }
 
-/* カード（白 × 水色） */
+/* カード */
 .card {
     background: #ffffff;
     border: 2px solid #cfeaff;
@@ -37,7 +37,7 @@ input, textarea {
     background-color: white !important;
 }
 
-/* ボタン（白 × 水色） */
+/* ボタン */
 div.stButton > button {
     background-color: #d4efff;
     color: #1b85c9;
@@ -53,33 +53,64 @@ div.stButton > button:hover {
     border-color: #7ccaff;
 }
 
-/* 成功メッセージを水色化 */
+/* success メッセージ */
 div.stAlert.success {
     background-color: #e3f6ff;
     border-left: 5px solid #5cc0ff !important;
     color: #1479b8;
 }
 
-/* warning を優しい色に */
+/* warning */
 div.stAlert.warning {
     background-color: #fff8e5;
     border-left: 5px solid #ffc96b !important;
     color: #b37a00;
 }
 
-/* レシピ文を読みやすく */
+/* 通常テキスト */
 p, li {
     font-size: 16px;
     line-height: 1.6;
     color: #234b5e;
 }
 
+/* ────────────────
+   レシピカード（かわいく）
+──────────────── */
+.recipe-card {
+    background: #ffffff;
+    border: 2px solid #cfeaff;
+    border-radius: 18px;
+    padding: 25px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(180, 215, 255, 0.3);
+}
+
+/* レシピタイトル */
+.recipe-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #2da4e8;
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px dashed #bfe3ff;
+}
+
+/* 説明文など */
+.recipe-desc {
+    color: #345b70;
+    line-height: 1.7;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
 
-
-# 🔒 OpenAI APIキーの読み込み
+# 🔒 APIキー
 api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
 
 if not api_key:
@@ -91,7 +122,7 @@ else:
     st.title("🍳 ディナープランナー")
     st.write("食材と気分から、ぴったりのレシピを提案します！")
 
-    # ✅ 入力欄カード
+    # 入力欄カード
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
     ingredients = st.text_input("食材を入力（カンマ区切りで）")
@@ -99,7 +130,7 @@ else:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # 🍱 ボタン
+    # ボタン
     if st.button("レシピを提案して！"):
 
         if not ingredients or not mood:
@@ -115,15 +146,11 @@ else:
                 気分: {mood}
 
                 以下の形式で答えてください：
-                1. レシピ名
-                2. 説明
-                3. 材料
-                4. 作り方
-                5. 栄養情報（目安）
-                   - カロリー（kcal）
-                   - タンパク質（g）
-                   - 脂質（g）
-                   - 炭水化物（g）
+                🍙 レシピ名
+                📝 説明
+                🥕 材料
+                🔥 作り方
+                💡 栄養情報（目安）
                 """
 
                 response = client.chat.completions.create(
@@ -136,10 +163,15 @@ else:
 
                 recipe = response.choices[0].message.content
 
-            # ✅ レシピ表示カード
-            st.markdown('<div class="card">', unsafe_allow_html=True)
+            # レシピカード表示
+            st.markdown(f"""
+            <div class="recipe-card">
 
-            st.success("🍽️ レシピができました！")
-            st.markdown(recipe)
+                <div class="recipe-title">🍽️ 今日のレシピ</div>
 
-            st.markdown("</div>", unsafe_allow_html=True)
+                <div class="recipe-desc">
+                {recipe}
+                </div>
+
+            </div>
+            """, unsafe_allow_html=True)
