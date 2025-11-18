@@ -110,7 +110,7 @@ else:
     st.write("食材と気分から、ぴったりのレシピを提案します！")
 
     # 🧁 入力欄カード
-    unsafe_allow_html=True)
+    
 
     ingredients = st.text_input("食材を入力（カンマ区切りで）")
     mood = st.text_input("今日の気分（例：疲れた、寒い、元気）")
