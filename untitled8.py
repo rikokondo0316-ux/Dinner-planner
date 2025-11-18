@@ -53,14 +53,14 @@ div.stButton > button:hover {
     border-color: #7ccaff;
 }
 
-/* 成功メッセージを水色化 */
+/* 成功メッセージ */
 div.stAlert.success {
     background-color: #e3f6ff;
     border-left: 5px solid #5cc0ff !important;
     color: #1479b8;
 }
 
-/* warning を優しい色に */
+/* warning */
 div.stAlert.warning {
     background-color: #fff8e5;
     border-left: 5px solid #ffc96b !important;
@@ -77,9 +77,7 @@ p, li {
 </style>
 """, unsafe_allow_html=True)
 
-
-
-# 🔒 OpenAI APIキーの読み込み
+# 🔒 OpenAI APIキー
 api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
 
 if not api_key:
@@ -91,7 +89,10 @@ else:
     st.title("🍳 ディナープランナー")
     st.write("食材と気分から、ぴったりのレシピを提案します！")
 
-    # ✅ 入力欄カード
+    # ❌ ← 空白の枠を作っていた行を削除済み
+    # st.text_input("")  ← 削除！
+
+    # 入力欄カード
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
     ingredients = st.text_input("食材を入力（カンマ区切りで）")
@@ -136,7 +137,7 @@ else:
 
                 recipe = response.choices[0].message.content
 
-            # ✅ レシピ表示カード
+            # レシピ表示カード
             st.markdown('<div class="card">', unsafe_allow_html=True)
 
             st.success("🍽️ レシピができました！")
