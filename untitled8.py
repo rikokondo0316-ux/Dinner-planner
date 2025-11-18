@@ -37,11 +37,6 @@ input, textarea {
     background-color: white !important;
 }
 
-/* Streamlit の hidden input を非表示にする（←空白の枠の原因） */
-input[type="hidden"] {
-    display: none !important;
-}
-
 /* ボタン（白 × 水色） */
 div.stButton > button {
     background-color: #d4efff;
@@ -87,7 +82,9 @@ api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
 
 if not api_key:
     st.error("⚠️ OpenAI APIキーが設定されていません。Secrets または環境変数に設定してください。")
+
 else:
+    # OpenAIクライアント
     client = OpenAI(api_key=api_key)
 
     # 🌸 タイトル
@@ -107,4 +104,44 @@ else:
 
         if not ingredients or not mood:
             st.warning("⚠️ 食材と気分の両方を入力してください。")
+
         else:
+            with st.spinner("レシピを考え中...👩‍🍳"):
+
+                prompt = f"""
+                あなたは日本料理の専門家であり、栄養士でもあります。
+                次の食材を使って日本風の家庭料理を1つ提案してください。
+
+                食材: {ingredients}
+                気分: {mood}
+
+                以下の形式で答えてください：
+                1. レシピ名
+                2. 説明
+                3. 材料
+                4. 作り方
+                5. 栄養情報（目安）
+                   - カロリー（kcal）
+                   - タンパク質（g）
+                   - 脂質（g）
+                   - 炭水化物（g）
+                """
+
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful Japanese cooking assistant."},
+                        {"role": "user", "content": prompt}
+                    ],
+                )
+
+                recipe = response.choices[0].message.content
+
+            # レシピ表示カード
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+
+            st.success("🍽️ レシピができました！")
+            st.markdown(recipe)
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
