@@ -142,4 +142,4 @@ else:
             st.success("🍽️ レシピができました！")
             st.markdown(recipe)
 
-            st.markdown("</div>", unsafe_allow_html=
+            st.markdown("</div>", unsafe_allow_html=True
